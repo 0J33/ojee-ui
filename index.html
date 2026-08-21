@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#08080e">
+<meta name="description" content="ojee-ui — terminal-instrument-cluster design system. One CSS file, zero dependencies, themed entirely through tokens.">
+<title>ojee-ui · design system</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;700;900&family=Major+Mono+Display&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'Departure Mono';
+  src: url('https://cdn.jsdelivr.net/gh/rektdeckard/departure-mono@main/public/assets/DepartureMono-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+</style>
+
+<link rel="stylesheet" href="ojee-ui.css">
+<!-- Theme overlay. Empty for the built-in default; swapped by the picker. -->
+<link id="theme-link" rel="stylesheet" href="">
+
+<style>
+  /* Showcase-only chrome. Nothing here is part of the system —
+     it is the scaffolding the specimens sit in. */
+  .specimen { display: flex; flex-direction: column; gap: var(--s-3); }
+  .specimen > .spec-label {
+    font-family: var(--hud); font-size: 0.6rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--dim);
+  }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 2px; }
+  .sw { display: flex; flex-direction: column; }
+  .sw .chip-color { height: 46px; border: 1px solid var(--line-2); }
+  .sw .sw-meta { padding: 6px 8px; font-family: var(--hud); font-size: 0.55rem; letter-spacing: 0.12em; color: var(--dim); }
+  .sw .sw-meta b { display: block; color: var(--ink-2); font-weight: 400; text-transform: none; letter-spacing: 0; }
+  .themepick { display: inline-flex; gap: 2px; }
+  .ratio-ok { color: var(--ok); }
+  .ratio-bad { color: var(--err); }
+</style>
+</head>
+<body class="app grid-bg">
+
+<!-- Icon sprite. One stroke language: 1.5px, square caps, no fills. -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-grid" viewBox="0 0 24 24"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></symbol>
+  <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v9M7.5 6.2a7.5 7.5 0 1 0 9 0"/></symbol>
+  <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M4 18a8 8 0 1 1 16 0M12 18l4-5"/></symbol>
+  <symbol id="i-log" viewBox="0 0 24 24"><path d="M4 4h16M4 9h16M4 14h10M4 19h7"/></symbol>
+  <symbol id="i-cog" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-1.5 5.5M20 5v6h-6"/></symbol>
+  <symbol id="i-temp" viewBox="0 0 24 24"><path d="M14 14.8V4.5a2 2 0 1 0-4 0v10.3a4 4 0 1 0 4 0z"/></symbol>
+  <symbol id="i-fan" viewBox="0 0 24 24"><path d="M12 12c0-3 1-6 3.5-6S19 8.5 17 10.5 12 12 12 12zm0 0c3 0 6 1 6 3.5S15.5 19 13.5 17 12 12 12 12zm0 0c0 3-1 6-3.5 6S5 15.5 7 13.5 12 12 12 12zm0 0c-3 0-6-1-6-3.5S8.5 5 10.5 7 12 12 12 12z"/></symbol>
+  <symbol id="i-sleep" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+  <symbol id="i-quiet" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4zM17 9.5a4 4 0 0 1 0 5"/></symbol>
+  <symbol id="i-turbo" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></symbol>
+  <symbol id="i-empty" viewBox="0 0 24 24"><path d="M4 7h16v13H4zM4 7l2-3h12l2 3M9 12h6"/></symbol>
+</svg>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="hudbar" id="hudbar">
+  <span class="seg seg--accent seg--live"><b>ojee-ui</b></span>
+  <span class="seg">version <b>1.0.0</b></span>
+  <span class="seg hide-sm">theme <b id="hud-theme">ojee</b></span>
+  <span class="seg hide-sm">tokens <b id="hud-tokens">–</b></span>
+  <span class="seg right">local <b id="hud-clock">--:--:--</b></span>
+</div>
+
+<nav class="nav" aria-label="Primary">
+  <span class="nav-logo">ojee<span class="dot-accent">.</span>ui</span>
+  <div class="nav-links">
+    <a class="nav-link active" href="#foundations">Foundations</a>
+    <a class="nav-link" href="#controls">Controls</a>
+    <a class="nav-link" href="#surfaces">Surfaces</a>
+    <a class="nav-link" href="#data">Data</a>
+    <a class="nav-link" href="#feedback">Feedback</a>
+    <a class="nav-link" href="#contrast">Contrast</a>
+  </div>
+</nav>
+
+<main class="wrap" id="main">
+  <div class="stack-lg">
+
+    <!-- ══ intro ══════════════════════════════════════════════ -->
+    <section>
+      <h1 class="display">ojee<span style="color:var(--accent)">-</span>ui</h1>
+      <p style="color:var(--ink-2); max-width:62ch; margin-top:var(--s-3)">
+        A terminal-instrument-cluster design system. Cyan on near-black, all
+        monospace, zero border radius, one accent. One CSS file, no build step,
+        no dependencies — and every value routed through a token, so rebranding
+        is a second stylesheet rather than a fork.
+      </p>
+
+      <div class="flex" style="margin-top:var(--s-4)">
+        <span class="label">Theme</span>
+        <div class="themepick" role="group" aria-label="Theme">
+          <button class="btn btn--sm btn--ghost" data-theme="ojee" aria-pressed="true">ojee</button>
+          <button class="btn btn--sm btn--ghost" data-theme="ember" aria-pressed="false">ember</button>
+          <button class="btn btn--sm btn--ghost" data-theme="paper" aria-pressed="false">paper</button>
+        </div>
+        <span class="meta">all three pass WCAG 2.2 AA</span>
+      </div>
+    </section>
+
+    <!-- ══ foundations ═══════════════════════════════════════ -->
+    <section id="foundations">
+      <div class="section-head">
+        <span class="idx">01</span>
+        <h2 class="h2">Foundations</h2>
+        <span class="spacer"></span>
+        <span class="meta">colour · type · space</span>
+      </div>
+
+      <div class="stack-lg">
+        <div class="specimen">
+          <span class="spec-label">Surface &amp; ink ramp</span>
+          <div class="swatches" id="sw-core"></div>
+        </div>
+
+        <div class="specimen">
+          <span class="spec-label">Status &amp; data series</span>
+          <div class="swatches" id="sw-status"></div>
+        </div>
+
+        <div class="specimen">
+          <span class="spec-label">Type scale</span>
+          <div class="panel stack">
+            <div class="display">display</div>
+            <div class="h1">Heading one</div>
+            <div class="h2">Heading two</div>
+            <p style="color:var(--ink-2)">Body copy sits at 14px / 1.6 in the mono face. Long-form text is capped near 65 characters so a line stays scannable.</p>
+            <div class="label">Micro label · letter-spaced</div>
+            <div class="meta">hud meta line</div>
+            <div class="value">42.7</div>
+            <div><span class="kbd">Ctrl</span> <span class="kbd">K</span></div>
+          </div>
+        </div>
+
+        <div class="specimen">
+          <span class="spec-label">Space scale — 4 / 8 rhythm</span>
+          <div class="panel flex" id="space-scale"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ controls ═══════════════════════════════════════════ -->
+    <section id="controls">
+      <div class="section-head">
+        <span class="idx">02</span>
+        <h2 class="h2">Controls</h2>
+        <span class="spacer"></span>
+        <span class="meta">every hit area ≥ 44px</span>
+      </div>
+
+      <div class="grid grid--2" style="gap:2px">
+        <div class="panel stack">
+          <span class="spec-label">Buttons</span>
+          <div class="flex">
+            <button class="btn">Primary</button>
+            <button class="btn btn--ghost">Ghost</button>
+            <button class="btn btn--danger">Danger</button>
+            <button class="btn" disabled>Disabled</button>
+          </div>
+          <div class="flex">
+            <button class="btn btn--sm">Small</button>
+            <button class="btn btn--sm btn--ghost">Small ghost</button>
+            <button class="iconbtn" aria-label="Refresh"><svg class="ic" aria-hidden="true"><use href="#i-refresh"></use></svg></button>
+            <button class="iconbtn iconbtn--danger" aria-label="Power off"><svg class="ic" aria-hidden="true"><use href="#i-power"></use></svg></button>
+          </div>
+          <p class="meta">Small buttons keep their drawn size and grow an invisible hit area out to 44px.</p>
+        </div>
+
+        <div class="panel stack">
+          <span class="spec-label">Form fields</span>
+          <div class="field">
+            <label for="f-name">Device name</label>
+            <input class="input" id="f-name" type="text" placeholder="living-room-ac">
+            <span class="help">lowercase, no spaces</span>
+          </div>
+          <div class="field">
+            <label for="f-mode">Mode</label>
+            <select class="select" id="f-mode">
+              <option>auto</option><option>cool</option><option>dry</option><option>fan</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-bad">Poll interval</label>
+            <input class="input" id="f-bad" type="text" value="0" aria-invalid="true" aria-describedby="f-bad-err">
+            <span class="err-msg" id="f-bad-err">Must be at least 5 seconds — the device caps one session at ~17s.</span>
+          </div>
+          <label class="check"><input type="checkbox" checked><span>Trust this device for 30 days</span></label>
+          <label class="check"><input type="checkbox"><span>Run on a schedule</span></label>
+        </div>
+
+        <div class="panel stack">
+          <span class="spec-label">Segmented control</span>
+          <div class="segctl" role="group" aria-label="Fan speed">
+            <button aria-pressed="true">Auto</button>
+            <button aria-pressed="false">Low</button>
+            <button aria-pressed="false">Med</button>
+            <button aria-pressed="false">High</button>
+          </div>
+          <span class="spec-label">Glyph variant</span>
+          <div class="segctl segctl--glyph" role="group" aria-label="Preset">
+            <button aria-pressed="true"><svg class="ic" aria-hidden="true"><use href="#i-fan"></use></svg><span class="seglabel">Fan</span></button>
+            <button aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-quiet"></use></svg><span class="seglabel">Quiet</span></button>
+            <button aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-turbo"></use></svg><span class="seglabel">Turbo</span></button>
+            <button aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-sleep"></use></svg><span class="seglabel">Sleep</span></button>
+          </div>
+          <p class="meta">Icon-only controls have no accessible name — the label stays.</p>
+        </div>
+
+        <div class="panel stack">
+          <span class="spec-label">Toggle rows</span>
+          <div class="togglegrid">
+            <button class="togrow" data-on="1" aria-pressed="true">
+              <span class="tlabel"><svg class="ic" aria-hidden="true"><use href="#i-turbo"></use></svg>Turbo</span>
+              <span class="toggle"><span class="track"></span></span>
+            </button>
+            <button class="togrow" data-on="0" aria-pressed="false">
+              <span class="tlabel"><svg class="ic" aria-hidden="true"><use href="#i-quiet"></use></svg>Quiet</span>
+              <span class="toggle"><span class="track"></span></span>
+            </button>
+            <button class="togrow" data-on="0" aria-pressed="false">
+              <span class="tlabel"><svg class="ic" aria-hidden="true"><use href="#i-sleep"></use></svg>Sleep</span>
+              <span class="toggle"><span class="track"></span></span>
+            </button>
+            <button class="togrow" aria-disabled="true" aria-pressed="false">
+              <span class="tlabel"><svg class="ic" aria-hidden="true"><use href="#i-temp"></use></svg>Heat</span>
+              <span class="toggle"><span class="track"></span></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel stack" style="margin-top:2px">
+        <span class="spec-label">Radial setpoint dial</span>
+        <div class="dialwrap">
+          <div class="dial" id="dial">
+            <svg viewBox="0 0 256 256" role="img" aria-label="Setpoint 24 degrees Celsius, range 20 to 28">
+              <g transform="rotate(135 128 128)">
+                <circle class="d-track" cx="128" cy="128" r="100" stroke-dasharray="471.2 628.3"/>
+                <circle class="d-fill" id="dial-fill" cx="128" cy="128" r="100" stroke-dasharray="235.6 628.3"/>
+              </g>
+              <g id="dial-ticks"></g>
+            </svg>
+            <div class="d-center">
+              <div class="d-set"><span id="dial-val">24</span><sup>°C</sup></div>
+              <div class="meta">cool</div>
+              <div class="d-range meta">20–28°C</div>
+            </div>
+          </div>
+          <div class="dialbtns">
+            <button class="stepbtn" id="dial-down" aria-label="Decrease setpoint"><svg class="ic ic--lg" aria-hidden="true"><use href="#i-minus"></use></svg></button>
+            <input class="range" id="dial-range" type="range" min="20" max="28" value="24" aria-label="Target temperature">
+            <button class="stepbtn" id="dial-up" aria-label="Increase setpoint"><svg class="ic ic--lg" aria-hidden="true"><use href="#i-plus"></use></svg></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ surfaces ═══════════════════════════════════════════ -->
+    <section id="surfaces">
+      <div class="section-head">
+        <span class="idx">03</span>
+        <h2 class="h2">Surfaces</h2>
+        <span class="spacer"></span>
+        <span class="meta">panels · sheets · frames</span>
+      </div>
+
+      <div class="grid grid--2" style="gap:2px">
+        <div class="panel corners"><span class="c"></span>
+          <div class="panel-head"><span class="label">Panel · corners</span><span class="badge"><span class="dot dot--ok"></span>online</span></div>
+          <p style="color:var(--ink-2); font-size:0.78rem">Corner brackets mark a panel as an instrument readout rather than a card. Do not combine with the glow-top variant — they share a pseudo-element.</p>
+        </div>
+
+        <div class="panel panel--glowtop">
+          <div class="panel-head"><span class="label">Panel · glow top</span><span class="meta">hover me</span></div>
+          <p style="color:var(--ink-2); font-size:0.78rem">A hairline gradient fades in along the top edge on hover.</p>
+        </div>
+      </div>
+
+      <div class="sheet" style="margin-top:2px">
+        <div class="sheet-inner">
+          <div class="sheet-header">
+            <span>drw <b>OJU-001</b> · <em>drafting sheet</em></span>
+            <span class="right">rev <b>A</b> · scale <b>1:1</b> · sheet <b>1/1</b></span>
+          </div>
+          <div class="grid grid--2" style="gap:var(--s-4)">
+            <div class="stack">
+              <div class="fieldline"><span class="fl-k">host</span><span class="fl-lead"></span><span class="fl-v">ojee-hp-zorin</span></div>
+              <div class="fieldline"><span class="fl-k">uptime</span><span class="fl-lead"></span><span class="fl-v">9d 04:11</span></div>
+              <div class="fieldline"><span class="fl-k">link</span><span class="fl-lead"></span><span class="fl-v fl-v--accent">tailnet</span></div>
+            </div>
+            <div class="blueprint">
+              <span class="bp-cap">fig. <em>1</em> — hit area</span>
+              <div class="stack" style="align-items:flex-start">
+                <span class="callout">44px minimum</span>
+                <span class="callout">8px separation</span>
+              </div>
+            </div>
+          </div>
+          <div class="titleblock" style="margin-top:var(--s-3)">
+            <div class="tb"><span class="tb-k">system</span><span class="tb-v">ojee-ui</span></div>
+            <div class="tb"><span class="tb-k">version</span><span class="tb-v tb-v--accent">1.0.0</span></div>
+            <div class="tb"><span class="tb-k">licence</span><span class="tb-v">MIT</span></div>
+            <div class="tb"><span class="tb-k">status</span><span class="tb-v"><span class="stamp">issued</span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid--2" style="gap:2px; margin-top:2px">
+        <div class="window">
+          <div class="window-bar"><span class="wdot"></span><span class="wdot"></span><span class="wdot"></span><span class="wtitle meta">ojee@hp — bash</span></div>
+          <div class="window-body term">
+            <div><span class="ps1">$</span> node tests/check-contrast.mjs</div>
+            <div class="out">ojee (built-in default) — 20 checks, 0 failing</div>
+            <div class="out">ember.css — 20 checks, 0 failing</div>
+            <div class="out">paper.css — 20 checks, 0 failing<span class="cursor"></span></div>
+          </div>
+        </div>
+
+        <div class="cardgrid">
+          <button class="gate">
+            <span class="gate-top"><span>01</span><span class="gate-code">A</span></span>
+            <span class="gate-name"><svg class="ic ic--lg" aria-hidden="true"><use href="#i-grid"></use></svg>Overview</span>
+          </button>
+          <button class="gate">
+            <span class="gate-top"><span>02</span><span class="gate-code">B</span></span>
+            <span class="gate-name"><svg class="ic ic--lg" aria-hidden="true"><use href="#i-gauge"></use></svg>Metrics</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ data ═══════════════════════════════════════════════ -->
+    <section id="data">
+      <div class="section-head">
+        <span class="idx">04</span>
+        <h2 class="h2">Data</h2>
+        <span class="spacer"></span>
+        <span class="meta">colour is never the only encoding</span>
+      </div>
+
+      <div class="tiles">
+        <div class="panel stat"><span class="label">CPU</span><span class="value">38<sup style="font-size:1rem">%</sup></span><span class="delta delta--down">−4.2</span></div>
+        <div class="panel stat"><span class="label">Memory</span><span class="value">61<sup style="font-size:1rem">%</sup></span><span class="delta delta--up">+1.8</span></div>
+        <div class="panel stat"><span class="label">GPU</span><span class="value">12<sup style="font-size:1rem">%</sup></span><span class="delta">—</span></div>
+        <div class="panel stat"><span class="label">Temp</span><span class="value">54<sup style="font-size:1rem">°</sup></span><span class="delta delta--up">+3.0</span></div>
+      </div>
+
+      <div class="grid grid--2" style="gap:2px; margin-top:2px">
+        <div class="panel stack">
+          <div class="panel-head"><span class="label">Gauges</span></div>
+          <div class="flex" style="justify-content:space-around">
+            <div class="gauge"><svg class="g-ring" viewBox="0 0 76 76"><circle class="g-track" cx="38" cy="38" r="32"/><circle class="g-fill" cx="38" cy="38" r="32" stroke-dasharray="76 201"/></svg><span class="g-val">38%</span><span class="g-label">cpu</span></div>
+            <div class="gauge warn"><svg class="g-ring" viewBox="0 0 76 76"><circle class="g-track" cx="38" cy="38" r="32"/><circle class="g-fill" cx="38" cy="38" r="32" stroke-dasharray="153 201"/></svg><span class="g-val">76%</span><span class="g-label">mem</span></div>
+            <div class="gauge err"><svg class="g-ring" viewBox="0 0 76 76"><circle class="g-track" cx="38" cy="38" r="32"/><circle class="g-fill" cx="38" cy="38" r="32" stroke-dasharray="187 201"/></svg><span class="g-val">93%</span><span class="g-label">disk</span></div>
+          </div>
+        </div>
+
+        <div class="panel stack">
+          <div class="panel-head"><span class="label">Meters</span></div>
+          <div class="stack" style="gap:var(--s-2)">
+            <div class="fieldline"><span class="fl-k">nominal</span><span class="fl-lead"></span><span class="fl-v">38%</span></div>
+            <div class="bar"><div class="fill" style="width:38%"></div></div>
+            <div class="fieldline"><span class="fl-k">elevated</span><span class="fl-lead"></span><span class="fl-v">76%</span></div>
+            <div class="bar"><div class="fill fill--warn" style="width:76%"></div></div>
+            <div class="fieldline"><span class="fl-k">critical</span><span class="fl-lead"></span><span class="fl-v">93%</span></div>
+            <div class="bar"><div class="fill fill--err" style="width:93%"></div></div>
+            <div class="meter" style="margin-top:var(--s-2)" role="img" aria-label="Signal 6 of 10">
+              <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel stack" style="margin-top:2px">
+        <div class="panel-head"><span class="label">Core grid</span><span class="meta">every cell carries its index</span></div>
+        <div class="coregrid" id="coregrid" role="img" aria-label="Per-core CPU load heatmap, 20 cores"></div>
+      </div>
+
+      <div class="panel stack" style="margin-top:2px">
+        <div class="panel-head"><span class="label">Bar chart</span></div>
+        <div class="chart" id="chart"></div>
+        <div class="legend">
+          <span><i style="background:var(--chart-1)"></i>requests</span>
+          <span><i style="background:var(--chart-2)"></i>errors</span>
+          <span><i style="background:var(--chart-3)"></i>p95</span>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:2px">
+        <div class="panel-head"><span class="label">Table</span></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th scope="col">Device</th><th scope="col">Protocol</th><th scope="col">State</th><th scope="col" class="num">Latency</th></tr></thead>
+            <tbody>
+              <tr><td>loq-linux</td><td>rdp</td><td><span class="badge"><span class="dot dot--ok"></span>online</span></td><td class="num">12 ms</td></tr>
+              <tr><td>loq-windows</td><td>rdp</td><td><span class="badge"><span class="dot"></span>offline</span></td><td class="num">—</td></tr>
+              <tr><td>hp-zorin</td><td>local</td><td><span class="badge"><span class="dot dot--live"></span>live</span></td><td class="num">1 ms</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ feedback ═══════════════════════════════════════════ -->
+    <section id="feedback">
+      <div class="section-head">
+        <span class="idx">05</span>
+        <h2 class="h2">Feedback</h2>
+        <span class="spacer"></span>
+        <span class="meta">states · alerts · empties</span>
+      </div>
+
+      <div class="stack">
+        <div class="alert alert--info"><b>Info</b><span>The hub polls every 45 seconds because the device caps a session at ~17s and accepts one at a time.</span></div>
+        <div class="alert alert--ok"><b>Ready</b><span>All three themes passed 20 contrast checks.</span></div>
+        <div class="alert alert--warn"><b>Degraded</b><span>Running the simulated driver — no local key is set.</span></div>
+        <div class="alert alert--err"><b>Failed</b><span>Could not reach 192.168.1.36:56800. Check the USB adapter is on the Gamal network, then <a href="#feedback" style="color:var(--accent); text-decoration:underline">retry</a>.</span></div>
+      </div>
+
+      <div class="grid grid--2" style="gap:2px; margin-top:2px">
+        <div class="panel">
+          <div class="panel-head"><span class="label">Empty state</span></div>
+          <div class="empty">
+            <svg class="ic" aria-hidden="true"><use href="#i-empty"></use></svg>
+            <b>No automations yet</b>
+            <p>Automations run a scene when a trigger fires — a temperature crossing a threshold, or you arriving home.</p>
+            <button class="btn btn--sm">Create one</button>
+          </div>
+        </div>
+
+        <div class="panel stack">
+          <div class="panel-head"><span class="label">Loading</span></div>
+          <div class="skeleton" style="height:14px; width:70%"></div>
+          <div class="skeleton" style="height:14px; width:90%"></div>
+          <div class="skeleton" style="height:14px; width:45%"></div>
+          <div class="bar bar--scan" style="margin-top:var(--s-2)"><div class="fill"></div></div>
+          <p class="meta">Skeletons rather than a spinner for anything over 300ms.</p>
+        </div>
+      </div>
+
+      <div class="flex" style="margin-top:var(--s-3)">
+        <button class="btn btn--sm" data-toast="info">Toast · info</button>
+        <button class="btn btn--sm" data-toast="ok">Toast · ok</button>
+        <button class="btn btn--sm" data-toast="warn">Toast · warn</button>
+        <button class="btn btn--sm" data-toast="err">Toast · err</button>
+        <button class="btn btn--sm btn--ghost" id="open-modal">Open modal</button>
+      </div>
+    </section>
+
+    <!-- ══ contrast ═══════════════════════════════════════════ -->
+    <section id="contrast">
+      <div class="section-head">
+        <span class="idx">06</span>
+        <h2 class="h2">Contrast</h2>
+        <span class="spacer"></span>
+        <span class="meta">measured live, in this theme</span>
+      </div>
+
+      <div class="panel">
+        <p style="color:var(--ink-2); font-size:0.78rem; margin-bottom:var(--s-3); max-width:70ch">
+          Computed from the tokens actually applied right now — switch theme above
+          and the numbers move. Text needs 4.5:1 (WCAG 2.2 1.4.3); control
+          boundaries need 3:1 (1.4.11). <code style="color:var(--accent)">npm run check:contrast</code>
+          asserts the same table in CI, so a theme cannot regress silently.
+        </p>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th scope="col">Pairing</th><th scope="col">Role</th><th scope="col" class="num">Ratio</th><th scope="col" class="num">Floor</th><th scope="col">Result</th></tr></thead>
+            <tbody id="contrast-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<nav class="tabbar" aria-label="Sections">
+  <button class="tabitem active" data-goto="foundations"><svg class="ic ic--lg" aria-hidden="true"><use href="#i-grid"></use></svg><span>Base</span></button>
+  <button class="tabitem" data-goto="controls"><svg class="ic ic--lg" aria-hidden="true"><use href="#i-cog"></use></svg><span>Controls</span></button>
+  <button class="tabitem" data-goto="data"><svg class="ic ic--lg" aria-hidden="true"><use href="#i-gauge"></use></svg><span>Data</span></button>
+  <button class="tabitem" data-goto="feedback"><svg class="ic ic--lg" aria-hidden="true"><use href="#i-log"></use></svg><span>Feedback</span></button>
+  <button class="tabitem" data-goto="contrast"><svg class="ic ic--lg" aria-hidden="true"><use href="#i-temp"></use></svg><span>Contrast</span></button>
+</nav>
+
+<div class="statusbar">
+  <span class="ok">system nominal</span>
+  <span class="hide-sm">one file · zero dependencies</span>
+  <span class="right" id="sb-theme">theme: ojee</span>
+</div>
+
+<div id="modal-root"></div>
+<div class="toast-stack" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<script>
+'use strict';
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
+
+/* ── theme switching ───────────────────────────────────────────────
+   A theme is a second stylesheet that redefines tokens, so switching
+   is swapping one <link> href. The default theme is the built-in
+   token block in ojee-ui.css, i.e. no overlay at all. */
+const THEMES = ['ojee', 'ember', 'paper'];
+
+function setTheme(name) {
+  if (!THEMES.includes(name)) name = 'ojee';
+  $('#theme-link').href = name === 'ojee' ? '' : `themes/${name}.css`;
+  document.documentElement.dataset.theme = name;
+  $('#hud-theme').textContent = name;
+  $('#sb-theme').textContent = `theme: ${name}`;
+  $$('.themepick button').forEach((b) => {
+    b.setAttribute('aria-pressed', String(b.dataset.theme === name));
+  });
+  // The overlay loads async; recompute once it has applied.
+  requestAnimationFrame(() => setTimeout(renderTokens, 60));
+}
+window.setTheme = setTheme;
+
+$$('.themepick button').forEach((b) => b.addEventListener('click', () => setTheme(b.dataset.theme)));
+
+// Honour ?theme= so a test (or a link) can land directly on one.
+const urlTheme = new URLSearchParams(location.search).get('theme');
+
+// Also react to data-theme being set externally — that is how the
+// automated checks drive it.
+new MutationObserver(() => {
+  const want = document.documentElement.dataset.theme || 'ojee';
+  const have = $('#hud-theme').textContent;
+  if (want !== have) setTheme(want);
+}).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+/* ── colour maths, shared with tests/check-contrast.mjs ───────────── */
+const toLinear = (c) => { const v = c / 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+const lum = ([r, g, b]) => 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+const ratio = (a, b) => { const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x); return (hi + 0.05) / (lo + 0.05); };
+const over = (fg, a, bg) => fg.map((f, i) => Math.round(f * a + bg[i] * (1 - a)));
+const hex = ([r, g, b]) => '#' + [r, g, b].map((n) => n.toString(16).padStart(2, '0')).join('');
+
+/** Resolve a token to [r,g,b,a] by letting the browser do the parsing. */
+function tokenRGBA(name) {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  if (!raw) return null;
+  const probe = document.createElement('span');
+  probe.style.color = raw;
+  probe.style.display = 'none';
+  document.body.appendChild(probe);
+  const computed = getComputedStyle(probe).color;
+  probe.remove();
+  const m = /rgba?\(([^)]+)\)/.exec(computed);
+  if (!m) return null;
+  const p = m[1].split(/[,\s/]+/).filter(Boolean).map(Number);
+  return [p[0], p[1], p[2], p.length > 3 ? p[3] : 1];
+}
+
+function solid(name, bg) {
+  const c = tokenRGBA(name);
+  if (!c) return null;
+  const [r, g, b, a] = c;
+  return a >= 1 ? [r, g, b] : over([r, g, b], a, bg);
+}
+
+/* ── swatches + contrast table ─────────────────────────────────────── */
+const CORE = ['--bg', '--bg-2', '--panel', '--line', '--line-2', '--line-strong', '--ink', '--ink-2', '--dim', '--accent'];
+const STATUS = ['--ok', '--warn', '--err', '--info', '--chart-1', '--chart-2', '--chart-3', '--chart-4', '--chart-5', '--chart-6', '--chart-7', '--chart-8'];
+
+function swatch(name, bg) {
+  const c = solid(name, bg);
+  return `<div class="sw">
+    <div class="chip-color" style="background:var(${name})"></div>
+    <div class="sw-meta">${name}<b>${c ? hex(c) : '—'}</b></div>
+  </div>`;
+}
+
+function renderTokens() {
+  const bg = solid('--bg', [0, 0, 0]) || [0, 0, 0];
+  $('#sw-core').innerHTML = CORE.map((n) => swatch(n, bg)).join('');
+  $('#sw-status').innerHTML = STATUS.map((n) => swatch(n, bg)).join('');
+
+  const bg2 = solid('--bg-2', bg) || bg;
+  const panel = solid('--panel', bg) || bg;
+  const accent = solid('--accent', bg);
+  const onAccent = solid('--on-accent', accent || bg);
+
+  const rows = [];
+  const add = (label, role, fg, back, floor) => {
+    if (!fg || !back) return;
+    const r = ratio(fg, back);
+    rows.push(`<tr>
+      <td>${label}</td>
+      <td style="color:var(--dim)">${role}</td>
+      <td class="num">${r.toFixed(2)}:1</td>
+      <td class="num" style="color:var(--dim)">${floor}</td>
+      <td class="${r >= floor ? 'ratio-ok' : 'ratio-bad'}">${r >= floor ? 'PASS' : 'FAIL'}</td>
+    </tr>`);
+  };
+
+  for (const t of ['--ink', '--ink-2', '--dim', '--accent', '--ok', '--warn', '--err', '--info']) {
+    add(`${t} on --bg`, 'text', solid(t, bg), bg, 4.5);
+  }
+  add('--dim on --panel', 'text', solid('--dim', panel), panel, 4.5);
+  add('--dim on --bg-2', 'text in modals', solid('--dim', bg2), bg2, 4.5);
+  add('--on-accent on --accent', 'text on accent', onAccent, accent, 4.5);
+  add('--line-strong vs --bg', 'control boundary', solid('--line-strong', bg), bg, 3);
+  add('--line-strong vs --bg-2', 'control boundary', solid('--line-strong', bg2), bg2, 3);
+  add('--line-strong vs --panel', 'control boundary', solid('--line-strong', panel), panel, 3);
+  const c0 = solid('--cell-0', bg);
+  add('--cell-0-ink on --cell-0', 'heatmap label', solid('--cell-0-ink', c0 || bg), c0, 4.5);
+  for (const [cell, ink] of [['--cell-1', '--cell-ink'], ['--cell-2', '--cell-ink'], ['--cell-3', '--cell-hot-ink']]) {
+    const cb = solid(cell, bg);
+    add(`${ink} on ${cell}`, 'heatmap label', solid(ink, cb || bg), cb, 4.5);
+  }
+
+  $('#contrast-rows').innerHTML = rows.join('');
+
+  const count = [...document.styleSheets]
+    .filter((s) => { try { return !!s.cssRules; } catch { return false; } })
+    .flatMap((s) => [...s.cssRules])
+    .filter((r) => r.selectorText === ':root')
+    .reduce((n, r) => n + r.style.length, 0);
+  $('#hud-tokens').textContent = count || '—';
+}
+
+/* ── space scale ───────────────────────────────────────────────────── */
+$('#space-scale').innerHTML = [1, 2, 3, 4, 5, 6].map((i) => `
+  <div class="stack" style="gap:6px; align-items:center">
+    <div style="width:var(--s-${i}); height:var(--s-${i}); background:var(--accent)"></div>
+    <span class="meta">s-${i}</span>
+  </div>`).join('');
+
+/* ── core grid + chart ─────────────────────────────────────────────── */
+$('#coregrid').innerHTML = Array.from({ length: 20 }, (_, i) => {
+  const load = [8, 91, 34, 12, 67, 5, 78, 22, 96, 41, 15, 58, 3, 88, 29, 71, 9, 45, 62, 18][i];
+  const cls = load > 85 ? 'max' : load > 55 ? 'hi' : load > 25 ? 'med' : '';
+  return `<i class="${cls}" data-n="${i}" title="core ${i} — ${load}%"></i>`;
+}).join('');
+
+$('#chart').innerHTML = [42, 68, 31, 87, 55, 73, 29, 91, 47, 62, 38, 79]
+  .map((v) => `<i style="height:${v}%" title="${v}"></i>`).join('');
+
+/* ── dial ──────────────────────────────────────────────────────────── */
+const ARC = 2 * Math.PI * 100 * 0.75;
+const CIRC = 2 * Math.PI * 100;
+$('#dial-ticks').innerHTML = Array.from({ length: 15 }, (_, i) => {
+  const a = (135 + (270 * i) / 14) * (Math.PI / 180);
+  const r1 = 110, r2 = 116;
+  return `<line class="d-tick" x1="${(128 + r1 * Math.cos(a)).toFixed(1)}" y1="${(128 + r1 * Math.sin(a)).toFixed(1)}"
+           x2="${(128 + r2 * Math.cos(a)).toFixed(1)}" y2="${(128 + r2 * Math.sin(a)).toFixed(1)}"/>`;
+}).join('');
+
+function setDial(v) {
+  v = Math.max(20, Math.min(28, v));
+  $('#dial-range').value = v;
+  $('#dial-val').textContent = v;
+  const frac = (v - 20) / 8;
+  $('#dial-fill').setAttribute('stroke-dasharray', `${(ARC * frac).toFixed(1)} ${CIRC.toFixed(1)}`);
+  $('#dial').querySelector('svg').setAttribute('aria-label', `Setpoint ${v} degrees Celsius, range 20 to 28`);
+}
+$('#dial-range').addEventListener('input', (e) => setDial(Number(e.target.value)));
+$('#dial-down').addEventListener('click', () => setDial(Number($('#dial-range').value) - 1));
+$('#dial-up').addEventListener('click', () => setDial(Number($('#dial-range').value) + 1));
+setDial(24);
+
+/* ── toggle rows + segmented controls ──────────────────────────────── */
+$$('.togrow').forEach((row) => row.addEventListener('click', () => {
+  if (row.getAttribute('aria-disabled') === 'true') return;
+  const on = row.dataset.on === '1' ? '0' : '1';
+  row.dataset.on = on;
+  row.setAttribute('aria-pressed', String(on === '1'));
+  row.querySelector('input').checked = on === '1';
+}));
+
+$$('.segctl').forEach((group) => group.addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if (!btn || btn.disabled) return;
+  [...group.children].forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+}));
+
+/* ── toasts + modal ────────────────────────────────────────────────── */
+const TOAST_COPY = {
+  info: ['Reconnecting', 'attempt 2 of 5 — next in 4s'],
+  ok: ['Applied', 'setpoint 24 °C confirmed by the unit'],
+  warn: ['Degraded', 'running the simulated driver'],
+  err: ['Failed', 'device did not respond within 8s'],
+};
+$$('[data-toast]').forEach((b) => b.addEventListener('click', () => {
+  const kind = b.dataset.toast;
+  const [title, detail] = TOAST_COPY[kind];
+  const node = document.createElement('div');
+  node.className = `toast toast--${kind}`;
+  node.setAttribute('role', 'status');
+  node.innerHTML = `<b></b><span></span>`;
+  node.querySelector('b').textContent = title;
+  node.querySelector('span').textContent = detail;
+  $('#toasts').appendChild(node);
+  setTimeout(() => { node.style.opacity = '0'; setTimeout(() => node.remove(), 250); }, 4200);
+}));
+
+$('#open-modal').addEventListener('click', () => {
+  const root = $('#modal-root');
+  root.innerHTML = `
+    <div class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="m-title">
+      <div class="modal">
+        <div class="modal-head"><span id="m-title">Confirm overclock</span>
+          <button class="iconbtn" data-close aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#i-minus"></use></svg></button>
+        </div>
+        <div class="modal-body stack">
+          <p style="color:var(--ink-2); font-size:0.78rem">Lock the GPU core to <b style="color:var(--accent)">3090 MHz</b>. The change reverts automatically in 15 seconds unless confirmed — a dropped connection mid-change cannot leave the machine mis-clocked.</p>
+          <div class="alert alert--warn"><b>Note</b><span>Does not survive a reboot without the agent running.</span></div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn btn--sm btn--ghost" data-close>Cancel</button>
+          <button class="btn btn--sm" data-close>Apply for 15s</button>
+        </div>
+      </div>
+    </div>`;
+  const close = () => { root.innerHTML = ''; $('#open-modal').focus(); };
+  root.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', close));
+  root.querySelector('.modal-backdrop').addEventListener('click', (e) => { if (e.target === e.currentTarget) close(); });
+  document.addEventListener('keydown', function esc(e) {
+    if (e.key === 'Escape') { close(); document.removeEventListener('keydown', esc); }
+  });
+  root.querySelector('.modal .btn').focus();
+});
+
+/* ── nav + chrome ──────────────────────────────────────────────────── */
+$$('.tabitem').forEach((b) => b.addEventListener('click', () => {
+  $$('.tabitem').forEach((x) => x.classList.toggle('active', x === b));
+  document.getElementById(b.dataset.goto)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}));
+
+const sections = $$('main section[id]');
+new IntersectionObserver((entries) => {
+  for (const e of entries) {
+    if (!e.isIntersecting) continue;
+    $$('.nav-link').forEach((l) => l.classList.toggle('active', l.getAttribute('href') === `#${e.target.id}`));
+  }
+}, { rootMargin: '-40% 0px -55% 0px' }).observe ? sections.forEach((s) => {
+  new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      $$('.nav-link').forEach((l) => l.classList.toggle('active', l.getAttribute('href') === `#${e.target.id}`));
+    }
+  }, { rootMargin: '-40% 0px -55% 0px' }).observe(s);
+}) : null;
+
+setInterval(() => {
+  $('#hud-clock').textContent = new Date().toLocaleTimeString('en-GB', { hour12: false });
+}, 1000);
+$('#hud-clock').textContent = new Date().toLocaleTimeString('en-GB', { hour12: false });
+
+setTheme(urlTheme || 'ojee');
+</script>
+</body>
+</html>

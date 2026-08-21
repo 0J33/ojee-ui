@@ -1,0 +1,43 @@
+{
+  "name": "ojee-ui",
+  "version": "1.0.0",
+  "description": "Terminal-instrument-cluster design system. One CSS file, zero dependencies, fully themeable through tokens.",
+  "license": "MIT",
+  "author": "ojee <https://ojee.net>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0J33/ojee-ui.git"
+  },
+  "homepage": "https://github.com/0J33/ojee-ui#readme",
+  "keywords": [
+    "css",
+    "design-system",
+    "dark",
+    "terminal",
+    "monospace",
+    "dashboard",
+    "accessible"
+  ],
+  "type": "module",
+  "main": "ojee-ui.css",
+  "style": "ojee-ui.css",
+  "exports": {
+    ".": "./ojee-ui.css",
+    "./chrome": "./chrome.js",
+    "./standalone.html": "./standalone.html",
+    "./themes/*": "./themes/*"
+  },
+  "files": [
+    "ojee-ui.css",
+    "chrome.js",
+    "standalone.html",
+    "themes/",
+    "README.md"
+  ],
+  "scripts": {
+    "check:contrast": "node tests/check-contrast.mjs",
+    "check:dom": "bash tests/check-dom.sh",
+    "test": "npm run check:contrast && npm run check:dom",
+    "showcase": "python3 -m http.server 4173"
+  }
+}
