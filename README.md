@@ -130,13 +130,25 @@ incomplete count so the number never gets quietly ignored.
 | Group | Classes |
 |---|---|
 | Shell | `.app` `.wrap` `.hudbar` `.nav` `.tabbar` `.statusbar` `.skip` `.section-head` `.stack-lg` |
-| Surfaces | `.panel` `.corners` `.panel--glowtop` `.sheet` `.titleblock` `.blueprint` `.gate` `.window` `.browser` `.code` |
-| Controls | `.btn` `.iconbtn` `.stepbtn` `.input` `.select` `.textarea` `.toggle` `.check` `.range` `.segctl` `.togrow` `.dial` |
-| Data | `.stat` `.tiles` `.gauge` `.bar` `.meter` `.chart` `.linechart` `.coregrid` `.table` `.legend` |
+| Surfaces | `.panel` `.corners` `.panel--glowtop` `.sheet` `.titleblock` `.blueprint` `.gate` `.window` `.browser` `.code` `.row` `.listrow` `.logline` |
+| Controls | `.btn` `.btn--icon` `.iconbtn` `.stepbtn` `.input` `.select` `.textarea` `.toggle` `.check` `.range` `.segctl` `.togrow` `.dial` |
+| Data | `.stat` `.tiles` `.chartcard` `.vtag` `.gauge` `.bar` `.meter` `.chart` `.linechart` `.coregrid` `.table` `.legend` |
 | Feedback | `.alert` `.toast` `.modal` `.empty` `.skeleton` `.badge` `.dot` |
 | Type | `.display` `.h1` `.h2` `.label` `.meta` `.value` `.kbd` `.num` |
 
-Two pairs that look combinable and are not:
+Three pairs that look interchangeable and are not:
+
+- **`.row` and `.listrow`.** `.row` is a standalone bordered row — each entry is its own
+  surface. `.listrow` is a hairline row *inside* one `.panel` — a list of entries sharing a
+  surface. A service list, an activity log and a set of links are all the second. Giving each
+  entry its own border is the tell that a module has reinvented the list rather than used it.
+
+- **`.is-warn` / `.is-err` on a tile, and `.vtag--warn` / `.vtag--err` beside a value.** The
+  first says the reading itself crossed a threshold. The second belongs to a *second* reading
+  riding alongside the first and carries its own threshold — a CPU at 15% on a 92°C die must
+  not render the 15 in warning yellow. Folding them together is the bug that produces exactly
+  that.
+
 
 - **`.panel--glowtop` and `.corners`** both style `::before` on the same element. Applying both
   merges the corner bracket into the glow gradient and hover paints a solid accent block. A
