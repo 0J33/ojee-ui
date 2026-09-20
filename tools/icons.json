@@ -24,8 +24,8 @@
     "chevron": "chevron_right", "info": "info", "box": "inventory_2", "house": "home",
     "monitor": "monitor", "terminal": "terminal",
 
-    "gpu": "developer_board", "memory": "memory", "disk": "hard_drive",
-    "chip": "memory", "thermo": "device_thermostat", "net": "lan",
+    "gpu": "developer_board", "memory": "memory_alt", "disk": "hard_drive",
+    "chip": "deployed_code", "thermo": "device_thermostat", "net": "lan",
     "swap": "swap_horiz", "activity": "monitoring", "clock": "schedule",
     "game": "sports_esports", "play": "play_arrow", "stop": "stop",
     "restart": "restart_alt", "logs": "description", "list": "list",
@@ -50,11 +50,13 @@
     "pip": "picture_in_picture_alt", "snapshot": "photo_camera",
     "stats": "analytics", "help": "help", "newtab": "open_in_new",
 
-    "ac": "mode_fan", "auto": "mode_heat_cool", "fan": "mode_fan",
+    "ac": "mode_cool", "auto": "mode_heat_cool", "fan": "mode_fan",
     "scene": "auto_awesome_motion", "sleep": "bedtime", "mode": "tune",
     "display": "light_mode", "pin": "keep", "eco": "eco", "clean": "cleaning",
     "quiet": "noise_control_on", "turbo": "bolt", "health": "air_purifier",
-    "indoor": "cottage", "outdoor": "park"
+    "indoor": "cottage", "outdoor": "park",
+
+    "back": "chevron_left", "keyboard": "keyboard", "clipSend": "content_paste_go", "clipGet": "content_paste_search", "ctrlAltDel": "keyboard_control_key", "hide": "keyboard_arrow_up", "show": "keyboard_arrow_down", "exit": "close_fullscreen", "clickLeft": "left_click", "clickMiddle": "mouse", "clickRight": "right_click"
   },
   "rotate": { "swing-v": ["airwave", 90], "swing-h": ["airwave", 0] },
   "draw": {
