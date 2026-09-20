@@ -1,0 +1,63 @@
+{
+  "_comment": [
+    "The icon set, as names this codebase uses mapped onto Material Symbols.",
+    "",
+    "Six surfaces used to draw their own icons — ojee-ui, the console shell,",
+    "the remote/home modules, teg and storage — and `close`, `refresh`,",
+    "`search`, `warn`, `play`, `pause`, `shield`, `gauge` and `server` each",
+    "existed in three to five versions at different stroke weights. This file",
+    "is the one place a name becomes a drawing.",
+    "",
+    "`draw` holds the one icon Material has no equivalent for. Anything added",
+    "there needs the same geometry as the pack: viewBox 0 -960 960 960, a",
+    "single filled path, 60-unit stroke, square terminals.",
+    "",
+    "Regenerate with: node tools/build-icons.mjs"
+  ],
+  "pack": "@material-symbols/svg-400/outlined",
+  "map": {
+    "close": "close", "search": "search", "refresh": "refresh", "warn": "warning",
+    "power": "power_settings_new", "gauge": "speed", "grid": "grid_view",
+    "log": "description", "server": "dns", "shield": "shield", "cpu": "memory",
+    "temp": "device_thermostat", "plus": "add", "minus": "remove", "menu": "menu",
+    "cog": "settings", "check": "check", "arrow": "arrow_forward", "empty": "inbox",
+    "chevron": "chevron_right", "info": "info", "box": "inventory_2", "house": "home",
+    "monitor": "monitor", "terminal": "terminal",
+
+    "gpu": "developer_board", "memory": "memory", "disk": "hard_drive",
+    "chip": "memory", "thermo": "device_thermostat", "net": "lan",
+    "swap": "swap_horiz", "activity": "monitoring", "clock": "schedule",
+    "game": "sports_esports", "play": "play_arrow", "stop": "stop",
+    "restart": "restart_alt", "logs": "description", "list": "list",
+    "logout": "logout", "users": "group", "user": "person",
+
+    "file": "draft", "folder": "folder", "folderLock": "folder_off",
+    "folderUp": "drive_folder_upload", "newfile": "note_add", "image": "image",
+    "video": "movie", "audio": "music_note", "pdf": "picture_as_pdf",
+    "archive": "folder_zip", "code": "code", "drive": "storage",
+    "copy": "content_copy", "cut": "content_cut", "paste": "content_paste",
+    "move": "drive_file_move", "edit": "edit", "trash": "delete",
+    "download": "download", "upload": "upload", "save": "save", "share": "share",
+    "sort": "swap_vert", "eye": "visibility", "external": "open_in_new",
+    "lock": "lock", "locked": "lock", "unlock": "lock_open",
+
+    "pause": "pause", "prev": "skip_previous", "next": "skip_next",
+    "back10": "replay_10", "fwd10": "forward_10", "frameBack": "first_page",
+    "frameFwd": "last_page", "loop": "repeat", "speed": "speed",
+    "volume": "volume_up", "volumeLow": "volume_down", "mute": "volume_off",
+    "captions": "closed_caption", "aspect": "aspect_ratio", "rotate": "rotate_right",
+    "full": "fullscreen", "unfull": "fullscreen_exit",
+    "pip": "picture_in_picture_alt", "snapshot": "photo_camera",
+    "stats": "analytics", "help": "help", "newtab": "open_in_new",
+
+    "ac": "mode_fan", "auto": "mode_heat_cool", "fan": "mode_fan",
+    "scene": "auto_awesome_motion", "sleep": "bedtime", "mode": "tune",
+    "display": "light_mode", "pin": "keep", "eco": "eco", "clean": "cleaning",
+    "quiet": "noise_control_on", "turbo": "bolt", "health": "air_purifier",
+    "indoor": "cottage", "outdoor": "park"
+  },
+  "rotate": { "swing-v": ["airwave", 90], "swing-h": ["airwave", 0] },
+  "draw": {
+    "ab": "M170-700h230v60H230v420h170v60H170v-540ZM790-700H560v60h170v420H560v60h230v-540ZM490 -470L600 -580L600 -500L660 -500L660 -440L600 -440L600 -360L490 -470Z"
+  }
+}

@@ -1,7 +1,7 @@
 {
   "name": "ojee-ui",
   "version": "1.0.0",
-  "description": "Terminal-instrument-cluster design system. One CSS file, zero dependencies, fully themeable through tokens.",
+  "description": "Terminal-instrument-cluster design system. One CSS file, no runtime dependencies, fully themeable through tokens.",
   "license": "MIT",
   "author": "ojee <https://ojee.net>",
   "repository": {
@@ -38,6 +38,10 @@
     "check:contrast": "node tests/check-contrast.mjs",
     "check:dom": "bash tests/check-dom.sh",
     "test": "npm run check:contrast && npm run check:dom",
-    "showcase": "python3 -m http.server 4173"
+    "showcase": "python3 -m http.server 4173",
+    "icons": "node tools/build-icons.mjs"
+  },
+  "devDependencies": {
+    "@material-symbols/svg-400": "^0.47.4"
   }
 }

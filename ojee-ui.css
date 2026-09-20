@@ -345,10 +345,15 @@ a:hover { color: var(--accent); }
    ============================================================ */
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 
+/* Icons are Material Symbols Outlined, weight 400 — filled paths, not
+   strokes, so this fills rather than strokes. The outlined variant draws a
+   thin outline as a filled shape, which lands almost exactly where the
+   hand-drawn 1.5px square-cap set did; that similarity is why this pack was
+   chosen over a stroke-based one, which came out heavier and rounder.
+   Anything still drawn by hand must set fill/stroke on the element itself. */
 .ic {
   width: 16px; height: 16px; flex: none;
-  fill: none; stroke: currentColor;
-  stroke-width: 1.5; stroke-linecap: square; stroke-linejoin: miter;
+  fill: currentColor; stroke: none;
 }
 .ic--lg { width: 22px; height: 22px; }
 .ic--xl { width: 30px; height: 30px; }
