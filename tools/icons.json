@@ -57,6 +57,7 @@
     "indoor": "cottage", "outdoor": "park",
 
     "back": "chevron_left", "keyboard": "keyboard", "clipSend": "content_paste_go", "clipGet": "content_paste_search", "ctrlAltDel": "keyboard_control_key", "hide": "keyboard_arrow_up", "show": "keyboard_arrow_down", "exit": "close_fullscreen", "clickLeft": "left_click", "clickMiddle": "mouse", "clickRight": "right_click",
+    "signal": "signal_cellular_alt", "router": "router", "devices": "devices", "sms": "sms",
     "marker": "bookmark", "markerAdd": "bookmark_add"
   },
   "rotate": { "swing-v": ["airwave", 90], "swing-h": ["airwave", 0] },

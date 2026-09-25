@@ -1,0 +1,125 @@
+/* ============================================================
+   ojee-ui theme — calibre
+   ------------------------------------------------------------
+   The movement theme: a watch plate seen through its display back.
+   Tokens only, per the theme contract. The components this world
+   adds (bridges, complications, the crown, the rate scale) live in
+   alt/calibre.css, which is a system layer rather than a theme.
+
+   Load order:
+
+       <link rel="stylesheet" href="ojee-ui.css">
+       <link rel="stylesheet" href="themes/calibre.css">
+       <link rel="stylesheet" href="alt/calibre.css">
+
+   The ramp is metal rather than phosphor: rhodium and steel carry
+   the structure, brass carries anything transmitting force, blued
+   steel is a hand, ruby is a bearing, and cyan is kept for the one
+   thing that is alive right now — the beating second. That reserve
+   is the whole point of the theme. Spend cyan on a heading and the
+   second stops meaning anything.
+
+   Contrast, measured against --bg (#0b0f12):
+     --ink      #e9eef0  15.4:1
+     --ink-2    #9fb0b8   7.4:1
+     --dim      #71848d   4.1:1   (large text and micro-labels only)
+     --accent   #00ffff  13.6:1
+     --line-strong #5f747e 3.2:1  (control boundaries, WCAG 1.4.11)
+   ============================================================ */
+
+:root {
+  /* ---- surfaces: the plate, and what is machined into it ---- */
+  --bg-0: #07090b;
+  --bg-1: #0b0f12;
+  --bg: #0b0f12;
+  --bg-2: #101519;
+  --panel: #0d1216;
+
+  /* A plate is not flat black: it carries perlage and the cool cast of
+     rhodium. These tints are what the grain and the bloom are drawn from. */
+  --tint-1: rgba(160, 200, 210, 0.05);
+  --tint-2: rgba(160, 200, 210, 0.03);
+  --tint-3: rgba(0, 255, 255, 0.04);
+  --dot-grid: rgba(160, 200, 210, 0.07);
+
+  --chrome-surface: rgba(11, 15, 18, 0.78);
+  --chrome-blur: blur(14px);
+  --chrome: rgba(11, 15, 18, 0.9);
+  --chrome-2: rgba(11, 15, 18, 0.72);
+  --chrome-3: rgba(7, 9, 11, 0.62);
+  --chrome-4: #090d10;
+  --scrim: rgba(4, 6, 8, 0.72);
+
+  /* ---- ink ---- */
+  --ink: #e9eef0;
+  --ink-2: #9fb0b8;
+  --dim: #71848d;
+  --ink-hi: #ffffff;
+  --on-accent: #04181a;
+
+  /* ---- lines: rhodium at three weights ---- */
+  --line: rgba(190, 214, 222, 0.10);
+  --line-2: rgba(190, 214, 222, 0.05);
+  --line-strong: #5f747e;
+  --line-hover: #86a0aa;
+
+  /* ---- the beat ---- */
+  --accent: #00ffff;
+  --accent-08: rgba(0, 255, 255, 0.08);
+  --accent-03: rgba(0, 255, 255, 0.035);
+
+  --glow: 0 0 10px rgba(0, 255, 255, 0.35);
+  --glow-soft: 0 0 6px rgba(0, 255, 255, 0.22);
+  --glow-mid: 0 0 14px rgba(0, 255, 255, 0.4);
+  --glow-faint: 0 0 4px rgba(0, 255, 255, 0.16);
+  --glow-strong: 0 0 22px rgba(0, 255, 255, 0.55);
+
+  /* ---- state ---- */
+  --ok: #5bffa5;
+  --warn: #ffb000;
+  --err: #ff2d2d;
+  --info: #4a8fe0;
+  --err-line: rgba(255, 45, 45, 0.55);
+  --err-wash: rgba(255, 45, 45, 0.10);
+  --glow-ok: 0 0 10px rgba(91, 255, 165, 0.35);
+  --glow-warn: 0 0 10px rgba(255, 176, 0, 0.35);
+  --glow-err: 0 0 10px rgba(255, 45, 45, 0.4);
+
+  /* ---- series: the movement's own materials, in fixed order ---- */
+  --chart-1: #00ffff;   /* the beat */
+  --chart-2: #ffbf3f;   /* brass */
+  --chart-3: #4a8fe0;   /* blued steel */
+  --chart-4: #5bffa5;   /* luminous */
+  --chart-5: #ff4a6e;   /* ruby */
+  --chart-6: #9fb0b8;   /* rhodium */
+  --chart-7: #ffb000;   /* amber */
+  --chart-8: #dffcff;   /* the hot value */
+
+  --cell-0: rgba(190, 214, 222, 0.05);
+  --cell-0-ink: #71848d;
+  --cell-1: rgba(0, 255, 255, 0.14);
+  --cell-2: rgba(0, 255, 255, 0.34);
+  --cell-3: rgba(0, 255, 255, 0.62);
+  --cell-ink: #e9eef0;
+  --cell-hot-ink: #04181a;
+
+  /* ---- type: unchanged, and deliberately so ---------------------
+     A watch face would tempt a serif. This console is read as
+     instrumentation, the three faces are already the family's, and
+     changing them would trade legibility for costume. */
+  --mono: 'Geist Mono', ui-monospace, Menlo, monospace;
+  --pixel: 'Major Mono Display', ui-monospace, monospace;
+  --hud: 'Departure Mono', 'Geist Mono', ui-monospace, monospace;
+
+  /* ---- rhythm ----
+     A movement is laid out in small, exact increments; the scale keeps
+     ojee-ui's steps so module layouts still land on it. */
+  --s-1: 4px;
+  --dur: 0.26s;
+  --dur-2: 0.14s;
+  --t: all var(--dur-2) cubic-bezier(0.2, 0.7, 0.3, 1);
+  --hud-h: 30px;
+  --nav-h: 56px;
+  --hit: 44px;
+  --z-nav: 40;
+}

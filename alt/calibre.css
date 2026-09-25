@@ -1,0 +1,347 @@
+/* ============================================================
+   ojee-ui alt — calibre
+   ------------------------------------------------------------
+   A system layer, not a theme. themes/calibre.css re-values the
+   tokens; this file adds the parts a movement has that a dashboard
+   does not, and re-cuts the base components so a module written
+   against ojee-ui inherits the world without touching its own CSS.
+
+   Load after both:
+
+       ojee-ui.css  →  themes/calibre.css  →  alt/calibre.css
+
+   The rules of this world, so anything added later stays in it:
+
+   1. Nothing is a card. A container is a BRIDGE: a bevelled plate
+      held down by two screws, with côtes striping across it.
+   2. Roundness is drawn, never bordered. Every box is square-cut;
+      the circles in this console are dials and wheels rendered in
+      the canvas, so `border-radius` stays at zero.
+   3. Cyan is the beat. It belongs to the live second, the focused
+      control, and nothing else. State wears green, amber and red.
+   4. Depth comes from bevels and hairlines, never from a blur. A
+      movement has no drop shadows; it has edges catching light.
+   ============================================================ */
+
+/* ---------- the plate ---------- */
+/* The page ground. Perlage is drawn as two offset dot fields rather
+   than one: a single field reads as graph paper, two at different
+   scales and opacities read as overlapping circular graining. */
+.plate {
+  position: relative;
+  background:
+    radial-gradient(1100px 700px at 68% 8%, rgba(0, 255, 255, 0.045), transparent 60%),
+    linear-gradient(180deg, var(--bg-0), var(--bg-1) 40%, var(--bg-0));
+}
+.plate::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(var(--dot-grid) 1px, transparent 1px),
+    radial-gradient(rgba(160, 200, 210, 0.035) 1px, transparent 1px);
+  background-size: 26px 26px, 13px 13px;
+  background-position: 0 0, 6px 6px;
+  mask-image: radial-gradient(120% 110% at 50% 26%, #000 40%, transparent 92%);
+  opacity: 0.7;
+  z-index: 0;
+}
+/* The caseback's edge: the page is a movement seen through sapphire,
+   so it darkens at the rim rather than running to the screen edge. */
+.plate::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(130% 100% at 50% 40%, transparent 52%, rgba(3, 5, 6, 0.72) 100%);
+  z-index: 1;
+}
+
+/* ---------- bridges ---------- */
+/* The bevel is eight points because that is what a chamfered plate
+   has: four long edges and four cut corners. It is geometry, not a
+   silhouette approximation. */
+.bridge,
+.panel {
+  position: relative;
+  background: linear-gradient(158deg, var(--panel), var(--bg-1) 62%);
+  border: 1px solid var(--line);
+  clip-path: polygon(
+    10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px),
+    calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+  padding: var(--s-4);
+  transition: var(--t);
+}
+/* Côtes de Genève: parallel striping, swept a few degrees so it is
+   striping and not a hatch. Kept under 0.04 alpha — texture that
+   reads as content is a mistake. */
+.bridge::before,
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    96deg, rgba(190, 214, 222, 0.032) 0 1px, transparent 1px 11px);
+}
+.bridge:hover,
+.panel:hover {
+  border-color: var(--line-hover);
+  background: linear-gradient(158deg, #0f161a, var(--bg-1) 62%);
+}
+
+/* The two anchor screws every bridge is held down by. Drawn, with a
+   slot, at opposite corners — a bridge with one screw would rotate. */
+.bridge--screwed::after,
+.panel--screwed::after {
+  content: '';
+  position: absolute;
+  top: 7px; right: 7px;
+  width: 9px; height: 9px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: linear-gradient(90deg, transparent 43%, var(--line-strong) 43% 57%, transparent 57%);
+  opacity: 0.6;
+}
+
+/* ---------- complications ----------
+   A register: the object turning in its dial, the module's name printed on
+   that dial, and what it reports read out beside or beneath it. Deliberately
+   NOT a card — no panel, no border box, no label above a heading. The dial's
+   ring and its four index marks are drawn, which is what makes it read as an
+   instrument rather than a container. */
+.comp {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--ink-2);
+}
+.comp-dial {
+  position: relative;
+  width: 112px; height: 112px;
+  background: radial-gradient(60% 60% at 50% 45%, rgba(0, 255, 255, 0.05), transparent 72%);
+  pointer-events: none;
+}
+.comp-dial::before {
+  content: '';
+  position: absolute; inset: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+}
+.comp-dial::after {
+  content: '';
+  position: absolute; inset: 7px;
+  background:
+    linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px) 50% 0 / 1px 8px no-repeat,
+    linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px) 50% 100% / 1px 8px no-repeat,
+    linear-gradient(180deg, var(--line-strong) 0 1px, transparent 1px) 0 50% / 8px 1px no-repeat,
+    linear-gradient(180deg, var(--line-strong) 0 1px, transparent 1px) 100% 50% / 8px 1px no-repeat;
+}
+.comp-dial canvas { display: block; width: 100%; height: 100%; }
+.comp-mark {
+  position: absolute; left: 0; right: 0; bottom: 13px;
+  text-align: center;
+  font-family: var(--hud);
+  /* Printed small, the way a register's name is — but not below eleven
+     pixels and not in the dimmest ink the plate has. */
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.comp-read { display: grid; gap: 7px; justify-items: inherit; width: 100%; min-width: 0; }
+.comp-head { font-size: 0.88rem; line-height: 1.3; color: var(--ink); overflow-wrap: anywhere; }
+.comp-facts { display: grid; gap: 3px; margin: 0; width: 100%; }
+.comp-fact { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.comp-fact dt {
+  font-family: var(--hud); font-size: 0.7rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-2); white-space: nowrap;
+}
+.comp-fact .lead { flex: 1 1 auto; border-bottom: 1px dotted var(--line); align-self: center; min-width: 8px; }
+.comp-fact dd {
+  margin: 0; min-width: 0; font-size: 0.78rem; color: var(--ink);
+  font-variant-numeric: tabular-nums; white-space: normal; overflow-wrap: anywhere;
+  text-align: right;
+}
+.comp:hover .comp-dial::before { border-color: var(--line-hover); }
+.comp:hover .comp-head { color: var(--ink-hi); }
+.comp:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
+.comp[data-state="warn"] .comp-dial::before { border-color: rgba(255, 176, 0, 0.55); }
+.comp[data-state="err"] .comp-dial::before { border-color: var(--err-line); }
+.comp[data-state="down"] { opacity: 0.68; }
+
+/* ---------- the crown ---------- */
+/* The rotation lock. A crown is knurled, so the knurling is real
+   striping and the two states are pushed-in and pulled-out, which is
+   what a crown does. It is a button: it has a name and a focus ring. */
+.crown {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px 5px 6px;
+  background: none;
+  border: 1px solid var(--line-strong);
+  color: var(--ink-2);
+  font-family: var(--hud);
+  /* The state word is the whole point of this control, so it is not micro-type:
+     0.7rem clears the 11px floor where 0.58rem did not. */
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--t);
+}
+.crown::before {
+  content: '';
+  width: 16px; height: 17px;
+  flex: none;
+  /* The stem and the knurling in one paint: a solid block on the left where
+     the crown meets the case, fine striping across the rest of it. */
+  background:
+    linear-gradient(90deg, var(--line-strong) 0 3px, transparent 3px),
+    repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 3px);
+  border: 1px solid var(--line-strong);
+  transition: var(--t);
+}
+.crown:hover { color: var(--ink); border-color: var(--line-hover); }
+.crown[aria-pressed="true"] {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-08);
+}
+.crown[aria-pressed="true"]::before {
+  background:
+    linear-gradient(90deg, var(--accent) 0 3px, transparent 3px),
+    repeating-linear-gradient(90deg, var(--accent) 0 1px, transparent 1px 3px);
+  border-color: var(--accent);
+  /* Pushed in, the way a crown is when it is not being used. */
+  transform: translateX(2px);
+}
+.crown:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- the rate scale ---------- */
+/* How a watch is regulated: a scale with a zero in the middle, and a
+   pointer sitting where this clock actually is against true time. */
+.rate {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--s-2);
+  font-family: var(--hud);
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.rate-scale {
+  position: relative;
+  height: 14px;
+  border-left: 1px solid var(--line-strong);
+  border-right: 1px solid var(--line-strong);
+  background:
+    linear-gradient(180deg, transparent 45%, var(--line) 45% 55%, transparent 55%),
+    repeating-linear-gradient(90deg, var(--line-2) 0 1px, transparent 1px 9px);
+}
+.rate-scale::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: -2px; bottom: -2px;
+  width: 1px;
+  background: var(--line-strong);
+}
+.rate-pointer {
+  position: absolute;
+  top: -3px;
+  width: 1px;
+  height: calc(100% + 6px);
+  background: var(--accent);
+  box-shadow: var(--glow-soft);
+  transform: translateX(-0.5px);
+  transition: left var(--dur) cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.rate-value { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* ---------- jewels ---------- */
+/* The bullet of this world. A ruby in a gold chaton, at 7px, used
+   where a list needs a mark and a dot would be anonymous. */
+.jewel {
+  display: inline-block;
+  width: 7px; height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--chart-5);
+  box-shadow: 0 0 0 1px rgba(255, 191, 63, 0.55), 0 0 6px rgba(255, 74, 110, 0.5);
+}
+.jewel--ok { background: var(--ok); box-shadow: 0 0 0 1px rgba(255, 191, 63, 0.4), var(--glow-ok); }
+.jewel--warn { background: var(--warn); box-shadow: 0 0 0 1px rgba(255, 191, 63, 0.4), var(--glow-warn); }
+.jewel--err { background: var(--err); box-shadow: 0 0 0 1px rgba(255, 191, 63, 0.4), var(--glow-err); }
+.jewel--off { background: var(--dim); box-shadow: 0 0 0 1px rgba(190, 214, 222, 0.2); }
+
+/* ---------- base components, re-cut ---------- */
+/* A module written against ojee-ui gets the world for free. */
+
+.btn {
+  background: linear-gradient(180deg, rgba(190, 214, 222, 0.05), transparent);
+  border-color: var(--line-strong);
+  color: var(--ink);
+  letter-spacing: 0.14em;
+}
+.btn:hover { background: rgba(190, 214, 222, 0.08); border-color: var(--accent); color: var(--accent); }
+.badge { border-color: var(--line-strong); background: rgba(190, 214, 222, 0.04); }
+.tiles { gap: 1px; background: var(--line-2); }
+.table th { background: transparent; border-bottom-color: var(--line-strong); }
+.table tbody tr:hover { background: var(--accent-03); }
+.segctl button { background: linear-gradient(180deg, rgba(190, 214, 222, 0.05), transparent); }
+.hudbar { border-bottom-color: var(--line); }
+
+/* ---------- browser surfaces ----------
+   The parts nobody draws still carry the design: selection, the caret,
+   the scrollbar and the focus ring all ship with defaults that belong
+   to no design system. */
+::selection { background: rgba(0, 255, 255, 0.24); color: var(--ink-hi); }
+:root { caret-color: var(--accent); accent-color: var(--accent); }
+* { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line-strong); border: 3px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--line-hover); background-clip: content-box; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rate-pointer { transition: none; }
+}
+
+/* ── the sheet ───────────────────────────────────────────────────────────
+   The console's front door is a sheet, and in this world a sheet is a bridge:
+   chamfered at eight points, striped with côtes, held by a screw. Its inner
+   rule — a second rectangle inset seven pixels — is the one thing kept from
+   the drawing-sheet it used to be, because a bridge has an edge inside its
+   edge too. */
+.sheet {
+  background: linear-gradient(158deg, var(--panel), var(--bg-1) 62%);
+  border: 1px solid var(--line);
+  clip-path: polygon(
+    10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px),
+    calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+}
+.sheet::before {
+  inset: 9px;
+  border-color: var(--line-2);
+  background: repeating-linear-gradient(
+    96deg, rgba(190, 214, 222, 0.032) 0 1px, transparent 1px 11px);
+}
+/* The anchor screw goes top LEFT: the sheet's header runs to its right edge,
+   and a screw through the last word of it is not an anchor, it is a typo. */
+.sheet::after {
+  content: '';
+  position: absolute;
+  top: 9px; left: 9px;
+  width: 9px; height: 9px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: linear-gradient(90deg, transparent 43%, var(--line-strong) 43% 57%, transparent 57%);
+  pointer-events: none;
+}
+.sheet-header { font-size: 0.68rem; color: var(--ink-2); padding-left: 14px; }
