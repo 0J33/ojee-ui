@@ -136,6 +136,7 @@
     "clickMiddle": "mouse",
     "clickRight": "right_click",
     "mouse": "mouse",
+    "music": "music_note",
     "signal": "signal_cellular_alt",
     "router": "router",
     "devices": "devices",
