@@ -88,6 +88,7 @@
     "locked": "lock",
     "unlock": "lock_open",
     "pause": "pause",
+    "watch": "watch",
     "prev": "skip_previous",
     "next": "skip_next",
     "back10": "replay_10",
