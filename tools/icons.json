@@ -141,7 +141,8 @@
     "devices": "devices",
     "sms": "sms",
     "marker": "bookmark",
-    "markerAdd": "bookmark_add"
+    "markerAdd": "bookmark_add",
+    "chart": "show_chart"
   },
   "rotate": {
     "swing-v": [
