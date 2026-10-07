@@ -144,7 +144,12 @@
     "sms": "sms",
     "marker": "bookmark",
     "markerAdd": "bookmark_add",
-    "chart": "show_chart"
+    "chart": "show_chart",
+    "heart": "ecg_heart",
+    "walk": "directions_walk",
+    "lift": "fitness_center",
+    "scale": "monitor_weight",
+    "link": "link"
   },
   "rotate": {
     "swing-v": [
