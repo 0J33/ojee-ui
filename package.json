@@ -1,6 +1,6 @@
 {
   "name": "ojee-ui",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Terminal-instrument-cluster design system. One CSS file, no runtime dependencies, fully themeable through tokens.",
   "license": "MIT",
   "author": "ojee <https://ojee.net>",
@@ -23,12 +23,14 @@
   "style": "ojee-ui.css",
   "exports": {
     ".": "./ojee-ui.css",
+    "./v2": "./ojee-ui2.css",
     "./chrome": "./chrome.js",
     "./standalone.html": "./standalone.html",
     "./themes/*": "./themes/*"
   },
   "files": [
     "ojee-ui.css",
+    "ojee-ui2.css",
     "chrome.js",
     "standalone.html",
     "themes/",

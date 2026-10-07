@@ -19,6 +19,13 @@
 </style>
 
 <link rel="stylesheet" href="ojee-ui.css">
+<script>
+  /* ?v=2 shows the same showcase on v2 (ojee-ui2.css, the monochrome system). */
+  if (new URLSearchParams(location.search).get('v') === '2') {
+    document.currentScript.previousElementSibling.href = 'ojee-ui2.css';
+    document.documentElement.dataset.ojeeUi = '2';
+  }
+</script>
 <!-- Theme overlay. Empty for the built-in default; swapped by the picker. -->
 <link id="theme-link" rel="stylesheet" href="">
 

@@ -3,6 +3,10 @@
 A terminal-instrument-cluster design system. Cyan on near-black, all monospace, zero border
 radius, one accent.
 
+**Two versions ship side by side.** v1 (`ojee-ui.css`, cyan) is unchanged. v2
+(`ojee-ui2.css`) is the monochrome instrument panel the console now uses — see
+[Version 2](#version-2--monochrome).
+
 One CSS file. No build step, no dependencies, no framework. Every value routed through a token,
 so rebranding is a second stylesheet rather than a fork.
 
@@ -21,6 +25,26 @@ Two optional companions ship alongside it:
 | `standalone.html` | a complete, module-agnostic app shell. Reads a `module.json`, builds nav from its views, and mounts its UI through `ModuleHost`. Drop it in unchanged and a module has a front end. |
 
 ---
+
+## Version 2 — monochrome
+
+`ojee-ui2.css` is a second, complete stylesheet, not a theme on top of v1. Same class names,
+same token names, so a page moves to it by swapping one `<link>`:
+
+```html
+<link rel="stylesheet" href="ojee-ui2.css">   <!-- or: import 'ojee-ui/v2' -->
+```
+
+What changes: a black field; white and grey ink; white as the only accent; no glow, bloom, blur
+or gradients; one face (Geist Mono); colour only where it means state — ok, warn, err — and
+charts in greys told apart by label, not hue. The v1 themes (`ember`, `paper`, `calibre`) are
+overlays for v1 and are not promised to suit v2.
+
+Pick per page: anything not yet migrated keeps v1 and keeps working. The showcase renders on
+either — open `index.html?v=2`. `npm run check:contrast` audits both versions.
+
+The console's copy (`ojee-console/public/ojee-ui2.css`) and each module's `public/ojee-ui2.css`
+are copies of this file; this repo is the source of truth.
 
 ## Themes
 

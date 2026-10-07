@@ -124,10 +124,10 @@ function extractTokens(css) {
 const AA_TEXT = 4.5;      // WCAG 2.2 1.4.3, normal-size text
 const AA_NONTEXT = 3.0;   // WCAG 2.2 1.4.11, UI component boundaries
 
-function auditTheme(themeFile) {
-  const base = readFileSync(join(ROOT, 'ojee-ui.css'), 'utf8');
+function auditTheme(themeFile, baseFile = 'ojee-ui.css') {
+  const base = readFileSync(join(ROOT, baseFile), 'utf8');
   let tokens = extractTokens(base);
-  let label = 'ojee (built-in default)';
+  let label = baseFile === 'ojee-ui.css' ? 'ojee (built-in default)' : `${baseFile} (built-in default)`;
 
   if (themeFile) {
     const themeCss = readFileSync(themeFile, 'utf8');
@@ -212,12 +212,14 @@ function auditTheme(themeFile) {
 const args = process.argv.slice(2);
 // No args: check the built-in default plus every shipped theme. The template
 // is documentation, not a theme, so it is deliberately skipped.
+// v2 (the monochrome system) is checked on its own token block: the v1 themes
+// are overlays for v1 and are not promised to suit v2.
 const targets = args.length
-  ? args
-  : [null, join(ROOT, 'themes', 'ember.css'), join(ROOT, 'themes', 'paper.css')];
+  ? args.map((t) => [t])
+  : [[null], [join(ROOT, 'themes', 'ember.css')], [join(ROOT, 'themes', 'paper.css')], [null, 'ojee-ui2.css']];
 
 let total = 0;
-for (const t of targets) total += auditTheme(t);
+for (const [t, base] of targets) total += auditTheme(t, base);
 
 console.log(
   total === 0
