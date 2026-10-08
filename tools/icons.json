@@ -16,6 +16,9 @@
   ],
   "pack": "@material-symbols/svg-400/outlined",
   "map": {
+    "bell": "notifications",
+    "summary": "summarize",
+    "send": "send",
     "close": "close",
     "search": "search",
     "refresh": "refresh",
