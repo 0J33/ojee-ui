@@ -150,7 +150,7 @@
     "chart": "show_chart",
     "heart": "ecg_heart",
     "walk": "directions_walk",
-    "lift": "fitness_center",
+    "lift": "fitness_center", "workout": "exercise",
     "scale": "monitor_weight",
     "link": "link"
   },
