@@ -12,8 +12,8 @@
      convention as v1/v2: vendored, never fetched from a CDN). Inside the
      console a module needs none of it: the shell already loads it.
    - Inline icons3.svg once per page; icons are <svg class="i"><use href="#i-name"/></svg>.
-   - Layout queries are CONTAINER queries on `app` (the shell's root is the
-     container). A standalone page wraps its content in `.ui3-root`.
+   - Layout queries are CONTAINER queries on `app`; <body> is that container,
+     so they follow the page width in the console and standalone alike.
      Breakpoints: 700 (portrait tablet / narrow desktop), 1000, 1200 (sidebar).
    - Theme: <html data-theme="dark|light">; without it the OS decides.
      Accent: data-accent="cyan" (default) | "orange" | "violet".
@@ -81,7 +81,9 @@
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0}
 html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%;background:var(--page)}
-body{background:var(--page);color:var(--fg);font:400 14px/1.45 var(--font-sans);font-feature-settings:"ss01";-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+/* body is the `app` container: every layout query in this file (and in
+   modules) is a container query against the page's width. */
+body{container-type:inline-size;container-name:app;background:var(--page);color:var(--fg);font:400 14px/1.45 var(--font-sans);font-feature-settings:"ss01";-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
 ::selection{background:color-mix(in srgb,var(--acc) 30%,transparent);color:inherit}
 button,a,[role="button"],[role="tab"],[role="switch"]{touch-action:manipulation}
 button,[role="button"],[role="tab"],[role="switch"],.btn,.ib,.tab,.nav,.seg,.chip{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
@@ -112,7 +114,8 @@ kbd,.kbd{display:inline-flex;align-items:center;font:500 11px/1 var(--font-mono)
 .i{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle}
 .i.s{width:14px;height:14px}.i.l{width:18px;height:18px}.i.xl{width:24px;height:24px}
 
-/* standalone pages: be the container the components query */
+/* a nested region that should lay out by its own width (a side panel, a
+   standalone embed) can become the container instead */
 .ui3-root{container:app/inline-size}
 
 /* ---------- wordmark ---------- */
@@ -128,7 +131,7 @@ kbd,.kbd{display:inline-flex;align-items:center;font:500 11px/1 var(--font-mono)
      <nav class="tabbar"> … </nav>                <1200: bottom tab bar
    </div>
    The nav never disappears: one of the two is always on screen. */
-.shell{container:app/inline-size;position:relative;height:100vh;height:100dvh;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;background:var(--page);overflow:hidden}
+.shell{position:relative;height:100vh;height:100dvh;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;background:var(--page);overflow:hidden}
 .side{display:none}
 .topbar{display:flex;align-items:center;gap:4px;height:calc(var(--topbar-h) + var(--safe-t));padding:var(--safe-t) calc(8px + var(--safe-r)) 0 calc(16px + var(--safe-l));border-bottom:1px solid var(--line);background:var(--page);position:relative;z-index:6}
 .topbar .wm{margin-right:auto}
@@ -253,8 +256,8 @@ kbd,.kbd{display:inline-flex;align-items:center;font:500 11px/1 var(--font-mono)
 .tag.c{border-color:transparent;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c)}
 .tag.ok{--c:var(--ok)}.tag.warn{--c:var(--warn)}.tag.err{--c:var(--err)}.tag.acc{--c:var(--acc)}
 .tag.ok,.tag.warn,.tag.err,.tag.acc{border-color:transparent;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c)}
-.st{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--fg-2);white-space:nowrap;min-width:0}
-.st>span:last-child{overflow:hidden;text-overflow:ellipsis}
+.st{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--fg-2);white-space:nowrap;min-width:0;max-width:100%}
+.st>span:last-child{overflow:hidden;text-overflow:ellipsis;min-width:0}
 .sev{width:28px;height:28px;border-radius:var(--r-2);display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--c,var(--fg-3)) 13%,transparent);color:var(--c,var(--fg-3))}
 .sev.ok{--c:var(--ok)}.sev.warn{--c:var(--warn)}.sev.err{--c:var(--err)}
 
@@ -275,6 +278,7 @@ kbd,.kbd{display:inline-flex;align-items:center;font:500 11px/1 var(--font-mono)
 .mv{font:500 15px/1.2 var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em;white-space:nowrap;color:var(--c,var(--fg));overflow:hidden;text-overflow:ellipsis}
 .mv .u{color:var(--fg-3);font-size:.78em;margin-left:1px;letter-spacing:0}
 .mv.lg{font-size:22px;letter-spacing:-.035em}
+.mv.txt{font-family:var(--font-sans);font-size:14px !important;letter-spacing:-.005em;font-weight:500;line-height:1.35;padding-top:2px}
 .mv.xl{font-size:32px;letter-spacing:-.04em;font-weight:500}
 .mv.ok{--c:var(--ok)}.mv.warn{--c:var(--warn)}.mv.err{--c:var(--err)}
 .ml{font-size:11.5px;color:var(--fg-3);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -338,7 +342,7 @@ a.row,button.row{width:100%;text-align:left;transition:background-color 120ms ea
 .srow{display:grid;grid-template-columns:minmax(0,1fr) 96px;grid-template-areas:"n s" "m m";gap:12px 16px;padding:14px;border-top:1px solid var(--line);align-items:center;transition:background-color 120ms ease;cursor:pointer;color:inherit}
 .srow:first-child{border-top:0}
 .srow .n{grid-area:n;display:flex;align-items:center;gap:12px;min-width:0}
-.srow .n>div{min-width:0}
+.srow .n>div{min-width:0;overflow:hidden}
 .srow .mets{grid-area:m;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
 .srow .spw{grid-area:s;min-width:0}
 .srow .chev{display:none;color:var(--fg-3)}
@@ -421,7 +425,7 @@ table.t tr.grp td{background:var(--raised);font-size:12px;font-weight:600;color:
 .set .t{font-weight:500}
 .set .d{font-size:12.5px;color:var(--fg-3);grid-column:1}
 .set .ctrl{grid-column:2;grid-row:1/3;display:flex;align-items:center;gap:8px;justify-content:flex-end}
-@container app (max-width:520px){.set.stack{grid-template-columns:minmax(0,1fr)}.set.stack .ctrl{grid-column:1;grid-row:auto;justify-content:flex-start;margin-top:8px}}
+@container app (max-width:520px){.set.wrap{grid-template-columns:minmax(0,1fr)}.set.wrap .ctrl{grid-column:1;grid-row:auto;justify-content:flex-start;margin-top:8px}}
 
 /* switch: <button class="sw" role="switch" aria-checked="true"></button> */
 .sw{width:36px;height:20px;border-radius:10px;background:var(--line-2);position:relative;transition:background-color 150ms ease;flex:none;cursor:pointer}

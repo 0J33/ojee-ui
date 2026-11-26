@@ -15,8 +15,7 @@ Approved reference: `ojee-console/concepts/redesign-2026-11/index.html`.
 
 Rules for modules: vendor the files, use the classes, put module-only CSS in the
 module's own file scoped under its root, and never patch ojee-ui3 to fix a module.
-Layout queries are container queries on `app` (the console shell is the container;
-a standalone page wraps content in `.ui3-root`). Breakpoints 700 / 1000 / 1200.
+Layout queries are container queries on `app` (`<body>` is the container). Breakpoints 700 / 1000 / 1200.
 v1/v2 token names and the common v1/v2 classes are aliased at the end of the file,
 so an un-migrated module still renders in the new look.
 
