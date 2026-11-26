@@ -1,5 +1,28 @@
 # ojee-ui
 
+## Version 3 — the 2026-11 console redesign (`ojee-ui3.css`)
+
+The console's current look: Geist + Geist Mono, neutral greys, one electric-cyan
+accent, colour otherwise only for status; dark is the hero, light is first-class.
+Approved reference: `ojee-console/concepts/redesign-2026-11/index.html`.
+
+| File | What it is |
+|---|---|
+| `ojee-ui3.css` | tokens (light + dark), type, every component: buttons, segmented control with sliding indicator, tags, status dot, panels, rows, metric value/label, sparkline, bars, tables, settings rows, switch, inputs, inbox, toast, sidebar / top bar / bottom tab bar, command palette, modal, empty states, skeletons |
+| `ojee-ui3.js` | string helpers (`ic`, `mv`, `metric`, `tag`, `st`, `bar`, `spark`, `ago`) and `placeSegs` / `bindSeg` for the segmented control |
+| `icons3.svg` | the icon sprite (Lucide-style line icons, 24 grid, 1.75 stroke). Old Material ids (`i-warn`, `i-cog`, `i-close` …) are kept as aliases |
+| `fonts/` | Geist and Geist Mono variable woff2, self-hosted (OFL) |
+
+Rules for modules: vendor the files, use the classes, put module-only CSS in the
+module's own file scoped under its root, and never patch ojee-ui3 to fix a module.
+Layout queries are container queries on `app` (the console shell is the container;
+a standalone page wraps content in `.ui3-root`). Breakpoints 700 / 1000 / 1200.
+v1/v2 token names and the common v1/v2 classes are aliased at the end of the file,
+so an un-migrated module still renders in the new look.
+
+---
+
+
 A terminal-instrument-cluster design system. Cyan on near-black, all monospace, zero border
 radius, one accent.
 
