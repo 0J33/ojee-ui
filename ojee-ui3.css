@@ -444,7 +444,15 @@ table.t tr.grp td{background:var(--raised);font-size:12px;font-weight:600;color:
 .field{display:grid;gap:6px}
 .field>label,.field>.lbl{font-size:12px;font-weight:500;color:var(--fg-2)}
 .unit{font-size:12px;color:var(--fg-3)}
-@media (pointer:coarse){.input,.select,.textarea,.in,input,select,textarea{font-size:16px}}
+@media (pointer:coarse){
+  .input,.select,.textarea,.in,input,select,textarea{font-size:16px}
+  /* fingers: 40–44px targets where a mouse is happy with 28–32 */
+  .btn{height:40px}.btn.sm,.btn--sm{height:36px;padding:0 12px}
+  .ib{width:40px;height:40px}.ib.sm{width:36px;height:36px}
+  .chip{height:34px}
+  .seg button,.seg a{height:32px}
+  .nav{height:40px}
+}
 
 /* ---------- terminal surface ---------- */
 .term{background:var(--term);color:var(--term-fg);font:400 13px/1.6 var(--font-mono);padding:14px 16px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;letter-spacing:-.01em}
